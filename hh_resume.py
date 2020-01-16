@@ -6,11 +6,11 @@ import pandas as pd
 
 
 # страница со всеми резюме 
-def get_all (page):
-  period = 7 # за сколько дней
-  area = 3 # Екатеринбург 3 / Москва 1
-  querry = 'Java' # Ключевое слово
-  url = 'https://hh.ru/search/resume?text='+querry +'&specialization=1&clusters=true&order_by=publication_time&no_magic=false&st=resumeSearch&logic=normal&pos=keywords&order_by=publication_time&exp_period=all_time&area=' + str(area) + '&search_period='+str(period)+'&page='+str(page)
+def get_all (query,area,period,page):
+  # period = 7 # за сколько дней
+  # area = 3 # Екатеринбург 3 / Москва 1
+  # query = 'Java' # Ключевое слово
+  url = 'https://hh.ru/search/resume?text='+query +'&specialization=1&clusters=true&order_by=publication_time&no_magic=false&st=resumeSearch&logic=normal&pos=keywords&order_by=publication_time&exp_period=all_time&area=' + str(area) + '&search_period='+str(period)+'&page='+str(page)
   #pos=full_text / keywords
   headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
   res = requests.get(url, headers=headers)
@@ -43,14 +43,14 @@ def if_null_num(par):
     res = None
   return res
 
-def get_resume():
+def get_resume(query,area,period):
   # колонки и массив строк для dataframe
   columns = ['title','dbirth','salary','last_work','last_work_per','url']
   rows = []
   i=0
   # запрашивать пока массив не опустеет
-  while len(get_all(i)) > 0:
-    result_all = get_all(i)
+  while len(get_all(query,area,period,i)) > 0:
+    result_all = get_all(query,area,period,i)
     # i = i + 1
     i +=1
     for item in result_all:

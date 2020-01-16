@@ -9,23 +9,23 @@ from datetime import timedelta
 
 import sys
 
-def get_request (page):
+def get_request (querry,area,page):
   # запрос
   # q = str(sys.argv[1]) 
-  q = 'Java'
+  # q = 'Java'
   # регион или город (1 москва 3 екатеринбург)
   # area = str(sys.argv[2])
-  area = 3
-  url = 'https://api.hh.ru/vacancies?area='+str(area)+'&page='+str(page)+'&per_page=10&text='+q
+  # area = 3
+  url = 'https://api.hh.ru/vacancies?area='+str(area)+'&page='+str(page)+'&per_page=10&text='+querry
   res = requests.get(url)
   return res
 
-def get_vacancy():
+def get_vacancy(querry,area):
   i=1
   df = pd.DataFrame()
   # идти по всем станицам пока не придет статус не 200, запихать все в один фрейм
-  while get_request(i).status_code == 200 and len(get_request(i).json()['items']) > 0:
-    json_data = get_request(i).json()
+  while get_request(querry,area,i).status_code == 200 and len(get_request(querry,area,i).json()['items']) > 0:
+    json_data = get_request(querry,area,i).json()
     norm = json_normalize(json_data['items'])
     dfi = pd.DataFrame(norm)
     # print('page :' + str(i) + ' length :' + str(len(get_request(i).json()['items'])))
@@ -33,7 +33,7 @@ def get_vacancy():
     i = i + 1
 
   # дата - 1 
-  new = datetime.now() + timedelta(days=-20)
+  # new = datetime.now() + timedelta(days=-20)
   # res = df[['']]
   # указана зарплата
   # with_zp = df[df['salary.from'] > 0][['name','employer.name','salary.from','salary.to','published_at','alternate_url']]
